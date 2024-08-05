@@ -1,73 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Full-Page Timer</title>
-  <style>
-    body, html {
-      height: 100%;
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: #282c34;
-      color: white;
-      font-family: Arial, sans-serif;
-      font-size: 3rem;
-    }
-    .timer {
-      text-align: center;
-    }
-  </style>
-</head>
-<body>
-  <div class="timer" id="timer">Loading...</div>
-
+  <title>Auction Timer</title>
   <script>
-    function getQueryParameter(name) {
-      const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get(name);
-    }
-
-    // Get the timestamp from the URL parameter
-    const timestampParam = getQueryParameter('timestamp');
-    if (!timestampParam) {
-      document.getElementById('timer').textContent = "No timestamp provided!";
-      throw new Error("Timestamp parameter is missing.");
-    }
-
-    // Convert the timestamp parameter to an integer
-    const targetTimestamp = parseInt(timestampParam, 10);
-    if (isNaN(targetTimestamp)) {
-      document.getElementById('timer').textContent = "Invalid timestamp!";
-      throw new Error("Invalid timestamp parameter.");
-    }
-
-    const targetDate = new Date(targetTimestamp);
-    const updateTimer = () => {
-      const now = new Date();
-      const timeDifference = targetDate - now;
-
-      if (timeDifference <= 0) {
-        document.getElementById('timer').textContent = "Time's up!";
-        clearInterval(timerInterval);
-        return;
+    function startCountdown(createdAt) {
+      const countdownDuration = 20; // 10 seconds
+      const createdAtDate = new Date(createdAt);
+      const countdownElement = document.getElementById('countdown');
+      
+      function updateCountdown() {
+        const now = new Date();
+        const elapsedSeconds = (now - createdAtDate) / 1000;
+        const remainingSeconds = Math.max(0, countdownDuration - elapsedSeconds);
+        
+        countdownElement.textContent = remainingSeconds.toFixed(0);
+        if (remainingSeconds > 0) {
+          setTimeout(updateCountdown, 1000);
+        } else {
+          countdownElement.textContent = "Time's up!";
+        }
       }
 
-      // Calculate hours, minutes, and seconds
-      const hours = Math.floor(timeDifference / (1000 * 60 * 60));
-      const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+      updateCountdown();
+    }
+    
+    function getQueryParam(param) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param);
+    }
 
-      // Display the time
-      document.getElementById('timer').textContent =
-        `${hours.toString().padStart(2, '0')}h ${minutes.toString().padStart(2, '0')}m ${seconds.toString().padStart(2, '0')}s`;
+    window.onload = function() {
+      const createdAt = getQueryParam('created_at');
+      if (createdAt) {
+        startCountdown(createdAt);
+      } else {
+        document.getElementById('countdown').textContent = "No timestamp provided.";
+      }
     };
-
-    // Update the timer every second
-    const timerInterval = setInterval(updateTimer, 1000);
-    updateTimer(); // Initial call to display the time immediately
   </script>
+</head>
+<body>
+  <div>
+    Time remaining: <span id="countdown"></span> seconds
+  </div>
 </body>
 </html>
