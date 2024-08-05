@@ -31,8 +31,8 @@
     }
 
     window.onload = function() {
-      //const createdAt = getQueryParam('created_at');
-      const createdAt = 'Mon, 05 Aug 2024 07:45:25 GMT'
+      const createdAt = getQueryParam('created_at');
+      //const createdAt = 'Mon, 05 Aug 2024 07:45:25 GMT'
       if (createdAt) {
         startCountdown(createdAt);
       } else {
