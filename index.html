@@ -1,76 +1,23 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Auction Timer</title>
-  <script>
-    
-    function startCountdown(createdAt) {
-      const countdownDuration = 5; // 10 seconds
-      const createdAtDate = new Date(createdAt);
-      const countdownElement = document.getElementById('countdown');
-      const fk_id = getQueryParam('id');
-      
-      function updateCountdown() {
-        const now = new Date();
-        const elapsedSeconds = (now - createdAtDate) / 1000;
-        const remainingSeconds = Math.max(0, countdownDuration - elapsedSeconds);
-        
-        countdownElement.textContent = remainingSeconds.toFixed(0);
-        if (remainingSeconds > 0) {
-          setTimeout(updateCountdown, 1000);
-        } else {
-          countdownElement.textContent = "Time's up!";
-          const data = {
-                id: fk_id,
-                status: 'completed'
-            };
-          
-          fetch('http://ec2-3-110-122-35.ap-south-1.compute.amazonaws.com:5000/update', {
-               method: 'POST',
-               headers: {
-                   'Content-Type': 'application/json'
-               },
-               body: JSON.stringify(data),
-            referrerPolicy: "unsafe-url" 
-           })
-           .then(response => response.json())
-           .then(result => {
-               alert('Feedback submitted successfully!');
-           })
-           .catch(error => {
-               console.error('Error:', error);
-               alert('Failed to submit feedback.');
-           });
-        }
-      }
-
-      updateCountdown();
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timer Example</title>
+  <style>
+    #status {
+      font-size: 1.5em;
+      margin-bottom: 10px;
     }
-    
-    function getQueryParam(param) {
-      const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get(param);
+    #timer {
+      font-size: 2em;
     }
-
-    window.onload = function() {
-      //const createdAt = getQueryParam('created_at');
-      const createdAt = new Date();
-      const fk_id = getQueryParam('id');
-      //document.write(fk_id)
-      //const createdAt = 'Mon, 05 Aug 2024 18:06:25 GMT'
-
-      if (createdAt) {
-        startCountdown(createdAt);
-      } else {
-        document.getElementById('countdown').textContent = "No timestamp provided.";
-      }
-    };
-  </script>
+  </style>
 </head>
 <body>
-  
-  <div>
-    Time remaining: <span id="countdown"></span> seconds
-  </div>
+  <div id="status">Status: Loading...</div>
+  <div id="timer">Timer: --</div>
+
+  <script src="app.js"></script>
 </body>
 </html>
