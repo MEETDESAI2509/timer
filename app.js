@@ -6,7 +6,7 @@ function updateStatusAndTimer() {
     .then(data => {
       const statusElement = document.getElementById('status');
       const timerElement = document.getElementById('timer');
-
+      console.log(data)
       // Assuming the API returns an object with 'status' and 'remainingTime' properties
       statusElement.textContent = `Status: ${data.status.status}`;
       timerElement.textContent = `Timer: ${data.status.remainingTime} seconds`;
