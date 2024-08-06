@@ -4,12 +4,86 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Auction Timer</title>
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    .progress-container {
+      width: 100%;
+      background-color: #e0e0e0;
+      border-radius: 25px;
+      overflow: hidden;
+      margin: 20px 0;
+    }
+    .progress-bar {
+      height: 30px;
+      width: 100%;
+      background-color: green;
+      text-align: center;
+      line-height: 30px;
+      color: white;
+      border-radius: 25px 0 0 25px;
+    }
+    .progress-bar.yellow {
+      background-color: yellow;
+      color: black;
+    }
+    .progress-bar.red {
+      background-color: red;
+    }
+  </style>
 </head>
 <body>
-  
-  <div><span id="timer"></span> </div>
+  <div class="progress-container">
+    <div class="progress-bar" id="progress-bar">20s</div>
+  </div>
 
-  <script src="app.js"></script>
+  <script>
+    const progressBar = document.getElementById('progress-bar');
+    function getQueryParam(param) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param);
+    }
+
+    const fk_id = getQueryParam('id');
+
+    const fetchTimer = async () => {
+      try {
+        const response = await fetch('https://historical-outgoing-floor.glitch.me/check-timer/'+fk_id);
+        const data = await response.json();
+
+        const { remainingTime, status } = data.status;
+        //const remainingTime = Math.ceil(remainingTime1);
+        //console.log(remainingTime);
+        // Update progress bar
+        const percentage = (remainingTime / 20) * 100;
+        progressBar.style.width = percentage + '%';
+        progressBar.textContent = remainingTime + 's';
+
+        // Change color based on time left
+        if (remainingTime <= 3) {
+          progressBar.classList.remove('yellow');
+          progressBar.classList.add('red');
+        } else if (remainingTime <= 5) {
+          progressBar.classList.remove('green');
+          progressBar.classList.add('yellow');
+        } else {
+          progressBar.classList.remove('yellow', 'red');
+          progressBar.classList.add('green');
+        }
+
+        // Handle timer completion logic
+        if (status === 'completed') {
+          clearInterval(timerInterval);
+          progressBar.textContent = 'Completed';
+        }
+      } catch (error) {
+        console.error('Error fetching timer:', error);
+      }
+    };
+
+    // Fetch timer every second
+    const timerInterval = setInterval(fetchTimer, 1000);
+
+    // Initial call to set progress bar width
+    fetchTimer();
+  </script>
 </body>
 </html>
