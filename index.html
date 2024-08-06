@@ -7,8 +7,10 @@
       const countdownDuration = 10; // 10 seconds
       const createdAtDate = new Date(createdAt);
       const countdownElement = document.getElementById('countdown');
+      const fk_id = getQueryParam('id');
       
       function updateCountdown() {
+        const fk_id = getQueryParam('id');
         const now = new Date();
         const elapsedSeconds = (now - createdAtDate) / 1000;
         const remainingSeconds = Math.max(0, countdownDuration - elapsedSeconds);
@@ -22,7 +24,7 @@
                 status: 'completed'
             };
           countdownElement.textContent = "Time's up!";
-          fetch('http://ec2-3-110-122-35.ap-south-1.compute.amazonaws.com/update', {
+          fetch('http://ec2-3-110-122-35.ap-south-1.compute.amazonaws.com:5000/update', {
                method: 'POST',
                headers: {
                    'Content-Type': 'application/json'
