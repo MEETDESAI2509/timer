@@ -21,7 +21,7 @@ let progress = setInterval( async () => {
     if (status === 'completed' || remainingTime <= 0 || data.status === 'No bids' ) {
     	progressStartValue = 0;
     	circularProgress.style.background = `conic-gradient(#7d2ae8 ${0 * 3.6}deg, #ededed 0deg)`
-    	progressValue.textContent = 'Round Over'
+    	progressValue.textContent = 'Time Up'
     	clearInterval(progress);
 
     }
