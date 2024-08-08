@@ -13,7 +13,7 @@ let progress = setInterval( async () => {
     }
 
     const fk_id = getQueryParam('id');
-	const response = await fetch('https://historical-outgoing-floor.glitch.me/check-timer/'+fk_id);
+	const response = await fetch('https://living-butter-truffle.glitch.me/check-timer/'+fk_id);
     const data = await response.json();
     console.log(data)
 
