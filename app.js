@@ -3,7 +3,7 @@
 
 let progressStartValue = 100,    
     progressEndValue = 0,    
-    speed = 100;
+    speed = 1000;
     
 let progress = setInterval( async () => {
 
